@@ -13,13 +13,14 @@ def time_range(start_time, end_time, number_of_intervals=1, gap_between_interval
 
 def compute_overlap_time(range1, range2):
     overlap_time = []
+
     for start1, end1 in range1:
         for start2, end2 in range2:
-            if end1 < start2 or end2 < start1:
-                return overlap_time
-            else:
-                low = max(start1, start2)
-                high = min(end1, end2)
+            #print("range 1:", range1)
+            #print("range 2:", range2)
+            low = max(start1, start2)
+            high = min(end1, end2)
+            if low < high:
                 overlap_time.append((low, high))
     return overlap_time
 
@@ -30,4 +31,8 @@ if __name__ == "__main__":
 
     no_overlap1 = time_range("2010-01-12 10:00:00", "2010-01-12 12:00:00")
     no_overlap2 = time_range("2010-01-12 12:30:00", "2010-01-12 12:45:00", 2, 60)
-    print(f'Overlap: {compute_overlap_time(no_overlap1, no_overlap2)}')
+    # print(f'Overlap: {compute_overlap_time(no_overlap1, no_overlap2)}')
+
+    three_intervals = time_range("2010-01-12 10:00:00", "2010-01-12 13:00:00", 3, 120)
+    two_intervals = time_range("2010-01-12 10:10:00", "2010-01-12 12:45:00", 2, 60)
+    # print(f'Multiple intervals {compute_overlap_time(three_intervals, two_intervals)}')
