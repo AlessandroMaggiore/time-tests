@@ -1,4 +1,5 @@
 from times import time_range, compute_overlap_time
+import pytest
 
 
 def test_given_input():
@@ -25,3 +26,12 @@ def test_multiple_overlap():
     result = compute_overlap_time(three_intervals, two_intervals)
     expected = [('2010-01-12 10:10:00', '2010-01-12 10:58:40'), ('2010-01-12 11:00:40', '2010-01-12 11:27:00'), ('2010-01-12 11:28:00', '2010-01-12 11:59:20'), ('2010-01-12 12:01:20', '2010-01-12 12:45:00')]
     assert result == expected
+
+def test_time_normal():
+    with pytest.raises(ValueError) as excinfo:
+        backwards_time = time_range("2010-01-11 10:00:00", "2010-01-10 13:00:00")
+        normal_time = time_range("2010-01-12 10:10:00", "2010-01-12 12:45:00", 2, 60)
+        
+        compute_overlap_time(backwards_time, normal_time)
+
+        assert excinfo is ValueError

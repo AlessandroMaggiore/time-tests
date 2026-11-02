@@ -4,6 +4,8 @@ import datetime
 def time_range(start_time, end_time, number_of_intervals=1, gap_between_intervals_s=0):
     start_time_s = datetime.datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S")
     end_time_s = datetime.datetime.strptime(end_time, "%Y-%m-%d %H:%M:%S")
+    if start_time_s > end_time_s:
+        raise ValueError("Time is flowing backwards?")
     d = (end_time_s - start_time_s).total_seconds() / number_of_intervals + gap_between_intervals_s * (1 / number_of_intervals - 1)
     sec_range = [(start_time_s + datetime.timedelta(seconds=i * d + i * gap_between_intervals_s),
                   start_time_s + datetime.timedelta(seconds=(i + 1) * d + i * gap_between_intervals_s))
@@ -16,8 +18,6 @@ def compute_overlap_time(range1, range2):
 
     for start1, end1 in range1:
         for start2, end2 in range2:
-            #print("range 1:", range1)
-            #print("range 2:", range2)
             low = max(start1, start2)
             high = min(end1, end2)
             if low < high:
@@ -36,3 +36,8 @@ if __name__ == "__main__":
     three_intervals = time_range("2010-01-12 10:00:00", "2010-01-12 13:00:00", 3, 120)
     two_intervals = time_range("2010-01-12 10:10:00", "2010-01-12 12:45:00", 2, 60)
     # print(f'Multiple intervals {compute_overlap_time(three_intervals, two_intervals)}')
+
+    backwards_time = time_range("2010-01-11 10:00:00", "2010-01-10 13:00:00")
+    normal_time = time_range("2010-01-12 10:10:00", "2010-01-12 12:45:00", 2, 60)
+    print(f'Time bending {compute_overlap_time(backwards_time, normal_time)}')
+    
